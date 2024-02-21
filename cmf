@@ -11,28 +11,34 @@ if len(sys.argv) > 1:
 			open("makefile", "w").write(
 """
 all:
-    cargo run
+	cargo run
 
 test:
-    @cargo test
+	@cargo test
 
 check:
-    @cargo check
+	@cargo check
 
 doc:
-    @cargo doc --open                
+	@cargo doc --open                
 """
 			)
 		case "python":
 			open("makefile", "w").write(
 """
 all:
-    python3 main.py
+	python3 main.py
 """
 			)
-		case other:  
-			print(f"could not find a makefile for: '{sys.argv[1]}'")
-    
+		
+		case "remove":
+			os.remove("makefile")
+   
+		case other:
+			print(f"No makefile forund for language {other}")
+			sys.exit(1)
+   
+
 else:
 	print(
 		""" Usage: pass the language as an argument to create a makefile for that language. """
