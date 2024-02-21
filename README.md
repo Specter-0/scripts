@@ -1,4 +1,3 @@
-
 # Scripts
 
 ### a Collection of CLI tool i have made
@@ -26,3 +25,10 @@ then add the path to scripts to your shells config: bash *~/.bashrc* or zsh *~/.
 export PATH="$HOME/replace/with/path/to/scripts:$PATH"
 ```
 you should now be able to run the files as CLI tools
+
+>#### If you can't get the path to work
+> Move scripts folder to the home directory and use 
+>``` bash
+>export PATH="$HOME/scripts:$PATH"
+>```
+> as the path
