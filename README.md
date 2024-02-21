@@ -17,7 +17,7 @@ chmod +x .setup.sh
 ```
 then
 ``` bash
-./.setup.sh
+./.setup
 ```
 
 then add the path to scripts to your shells config: bash *~/.bashrc* or zsh *~/.zshrc*
