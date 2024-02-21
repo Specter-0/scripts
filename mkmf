@@ -27,7 +27,7 @@ doc:
 			open("makefile", "w").write(
 """
 all:
-	python3 main.py
+	python3 ./main.py
 """
 			)
 		
