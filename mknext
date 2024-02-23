@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]] ; then
+    echo 'please provide a path, use '.' for current directory'
+    exit 1
+fi
+
+$(npx create-next-app@latest $1)
+$(npm i)
+$(npm i framer-motion@latest)
+$(npm run dev)
