@@ -6,18 +6,29 @@ def path(string : str):
     return os.path.expanduser(string)
     
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description='save and play youtube mp3s from the command line.')
 
-parser.add_argument("-n", "--name", help="name of song to play or add", type=str)
-parser.add_argument("-p", "--previus", help="play the previus song", action="store_true")
+parser.add_argument("name", help="name of song to play or add", type=str, nargs="?", default=None)
 parser.add_argument("-a", "--add", help="Add a new mp3 to the playlist from the given youtube url", type=str)
 parser.add_argument("-v", "--volume", help="Set the volume of the player", type=float)
 
-args = parser.parse_args()
-config_ref = path("~/scripts/.playconfig.json")
-config : dict = json.load(open(config_ref))
+parser.add_argument("--config", help="prints the config file", action="store_true")
+parser.add_argument("--store", help="prints all songs in the store", action="store_true")
 
-def play(name: str):
+args = parser.parse_args()
+
+config_ref : str = path("~/scripts/.playconfig.json")
+config : dict = json.load(open(config_ref))
+dump_config = lambda : json.dump(config, open(config_ref, "w"), indent=4)
+
+songs = {f.split(".")[0] : "song" for f in os.listdir(path("~/scripts/music")) if len(f.split(".")[0]) > 0} # get all the names of the files in the music folder and playlists
+playlists = {k : "playlist" for k in config["playlists"].keys()}
+used_names = {**songs, **playlists}
+
+def play(name: str) -> bool:
+    if not name in songs: 
+        return False
+    
     print(f"Playing {name}")
     pg.mixer.init()
     pg.mixer.music.load(path(f"~/scripts/music/{name}.mp3"))
@@ -25,37 +36,73 @@ def play(name: str):
     pg.mixer.music.play()
     
     config["previus"] = name
-    json.dump(config, open(config_ref, "w"), indent=4)
+    dump_config()
     
     while pg.mixer.music.get_busy(): 
         time.sleep(1)
+    
+    return True
 
+def playlist(name: str):
+    print("\nContent {")
+    for song in config["playlists"][name]:
+        print(f"    {song}")    
+    print("}")
+        
+    for song in config["playlists"][name]:
+        play(song)
+    
+    return True
 
-if args.volume:
+def volume():
     config["volume"] = args.volume
-    json.dump(config, open(config_ref, "w"), indent=4)
+    dump_config()
 
+def add():
+    if args.name in used_names:
+        print(f"Name {args.name} already exists as a {used_names[args.name]}")
+        quit()
+    
+    options = {
+            'format': 'bestaudio/best',
+            'outtmpl': path(f"~/scripts/music/{args.name}"),
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+        }
 
-if args.add:
-   print(f"Adding {args.name} to the playlist")
-   
-   options = {
-        'format': 'bestaudio/best',
-        'outtmpl': path(f"~/scripts/music/{args.name}"),
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
-    }
+    ydl = yt_dlp.YoutubeDL(options)
+    ydl.download([args.add])
+    
+    print(f"Added {args.name} to store")
 
-   ydl = yt_dlp.YoutubeDL(options)
-   ydl.download([args.add])
+def print_config():
+    print("\nConfig: {")
+    for k, v in config.items():
+        print(f"    {k}: {v}")
+    print("}")
 
+def print_store():
+    print("\nStore: {")
+    for name in songs.keys():
+        print(f"    {name}")
+    print("}")
 
-elif args.previus:
-    play(config["previus"])
+if args.config: 
+    print_config()
+    quit()
+if args.store: 
+    print_store()
+    quit()
+if args.volume: volume()
 
+if args.name == "previus": play(config["previus"]) 
 
-elif args.name:            
-    play(args.name)
+elif args.name and not args.add: 
+    if not play(args.name) and args.name in config["playlists"]:
+        playlist(args.name)
+        
+else:
+    if args.add: add()

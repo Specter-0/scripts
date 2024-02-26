@@ -1,4 +1,9 @@
 {
-    "previus": "rapgod",
-    "volume": 2.0
+    "previus": "getaway",
+    "volume": 2.0,
+    "playlists": {
+        "clg": [
+            "getaway"
+        ]
+    }
 }
