@@ -1,6 +1,10 @@
 #!/usr/local/bin/python3
-import yt_dlp, argparse, time, json
+import yt_dlp, argparse, time, json, os
 import pygame as pg
+
+def path(string : str):
+    return os.path.expanduser(string)
+    
 
 parser = argparse.ArgumentParser()
 
@@ -10,18 +14,18 @@ parser.add_argument("-a", "--add", help="Add a new mp3 to the playlist from the 
 parser.add_argument("-v", "--volume", help="Set the volume of the player", type=float)
 
 args = parser.parse_args()
-config_ref = ".playconfig.json"
+config_ref = path("~/scripts/.playconfig.json")
 config : dict = json.load(open(config_ref))
 
 def play(name: str):
     print(f"Playing {name}")
     pg.mixer.init()
-    pg.mixer.music.load(f"music/{name}.mp3")
+    pg.mixer.music.load(path(f"~/scripts/music/{name}.mp3"))
     pg.mixer.music.set_volume(config["volume"])
     pg.mixer.music.play()
     
     config["previus"] = name
-    json.dump(config, open(config_ref, "w"))
+    json.dump(config, open(config_ref, "w"), indent=4)
     
     while pg.mixer.music.get_busy(): 
         time.sleep(1)
@@ -29,7 +33,7 @@ def play(name: str):
 
 if args.volume:
     config["volume"] = args.volume
-    json.dump(config, open(config_ref, "w"))
+    json.dump(config, open(config_ref, "w"), indent=4)
 
 
 if args.add:
@@ -37,7 +41,7 @@ if args.add:
    
    options = {
         'format': 'bestaudio/best',
-        'outtmpl': f"music/{args.name}",
+        'outtmpl': path(f"~/scripts/music/{args.name}"),
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
@@ -55,4 +59,3 @@ elif args.previus:
 
 elif args.name:            
     play(args.name)
-    
