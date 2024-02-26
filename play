@@ -1,0 +1,58 @@
+#!/usr/local/bin/python3
+import yt_dlp, argparse, time, json
+import pygame as pg
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-n", "--name", help="name of song to play or add", type=str)
+parser.add_argument("-p", "--previus", help="play the previus song", action="store_true")
+parser.add_argument("-a", "--add", help="Add a new mp3 to the playlist from the given youtube url", type=str)
+parser.add_argument("-v", "--volume", help="Set the volume of the player", type=float)
+
+args = parser.parse_args()
+config_ref = ".playconfig.json"
+config : dict = json.load(open(config_ref))
+
+def play(name: str):
+    print(f"Playing {name}")
+    pg.mixer.init()
+    pg.mixer.music.load(f"music/{name}.mp3")
+    pg.mixer.music.set_volume(config["volume"])
+    pg.mixer.music.play()
+    
+    config["previus"] = name
+    json.dump(config, open(config_ref, "w"))
+    
+    while pg.mixer.music.get_busy(): 
+        time.sleep(1)
+
+
+if args.volume:
+    config["volume"] = args.volume
+    json.dump(config, open(config_ref, "w"))
+
+
+if args.add:
+   print(f"Adding {args.name} to the playlist")
+   
+   options = {
+        'format': 'bestaudio/best',
+        'outtmpl': f"music/{args.name}",
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+
+   ydl = yt_dlp.YoutubeDL(options)
+   ydl.download([args.add])
+
+
+elif args.previus:
+    play(config["previus"])
+
+
+elif args.name:            
+    play(args.name)
+    
