@@ -9,8 +9,10 @@ def path(string : str):
 parser = argparse.ArgumentParser(description='save and play youtube mp3s from the command line.')
 
 parser.add_argument("name", help="name of song to play or add", type=str, nargs="?", default=None)
-parser.add_argument("-a", "--add", help="Add a new mp3 to the playlist from the given youtube url", type=str)
+parser.add_argument("-a", "--add", help="Add a new mp3 to the store from the given youtube url", type=str)
 parser.add_argument("-v", "--volume", help="Set the volume of the player", type=float)
+parser.add_argument("-l", "--playlist", help="select a playlist, if it does not exist creates a new one, params after will be added to list", type=str, nargs="*")
+parser.add_argument("-d", "--delete", help="delete a song or playlist, if selection a playlist and a arg is passed, will remove that song for the playlist", type=str, nargs="*")
 
 parser.add_argument("--config", help="prints the config file", action="store_true")
 parser.add_argument("--store", help="prints all songs in the store", action="store_true")
@@ -26,7 +28,17 @@ playlists = {k : "playlist" for k in config["playlists"].keys()}
 used_names = {**songs, **playlists}
 
 def play(name: str) -> bool:
-    if not name in songs: 
+    if not name in songs and name in playlists.keys(): 
+        print("\nContent {")
+        for song in config["playlists"][name]:
+            print(f"    {song}")    
+        print("}")
+            
+        for song in config["playlists"][name]:
+            play(song)
+    
+    elif not name in songs:
+        print(f"Name {name} not found")
         return False
     
     print(f"Playing {name}")
@@ -43,16 +55,22 @@ def play(name: str) -> bool:
     
     return True
 
-def playlist(name: str):
-    print("\nContent {")
-    for song in config["playlists"][name]:
-        print(f"    {song}")    
-    print("}")
-        
-    for song in config["playlists"][name]:
-        play(song)
+def playlist():
+    if len(args.playlist) == 0:
+        print("No playlist name given")
+        quit()
     
-    return True
+    if not args.playlist[0] in playlists.keys():
+        config["playlists"][args.playlist[0]] = [song for song in args.playlist if song in songs.keys()]
+        dump_config()
+        
+        return
+    
+    if len(args.playlist) > 1:
+        config["playlists"][args.playlist[0]] = [song for song in args.playlist if song in songs.keys()] + config["playlists"][args.playlist[0]]
+        dump_config()
+        
+        return
 
 def volume():
     config["volume"] = args.volume
@@ -90,13 +108,43 @@ def print_store():
         print(f"    {name}")
     print("}")
 
+def delete():
+    if len(args.delete) == 0:
+        print("No name to delete")
+        quit()
+    
+    if args.delete[0] in songs:
+        os.remove(path(f"~/scripts/music/{args.delete[0]}.mp3"))
+        print(f"Deleted {args.delete[0]}")
+        
+    elif args.delete[0] in playlists.keys():
+        if len(args.delete) > 1:
+            for song in args.delete[1:]:
+                config["playlists"][args.delete[0]].remove(song)
+                print(f"Removed {song} from {args.delete[0]}")
+        else:
+            del config["playlists"][args.delete[0]]
+            print(f"Deleted {args.delete}")
+    else:
+        print(f"Name {args.delete[0]} not found in store")
+
+    dump_config()
+
 if args.config: 
     print_config()
     quit()
 if args.store: 
     print_store()
     quit()
-if args.volume: volume()
+if args.delete: 
+    delete()
+    quit()
+
+if isinstance(args.volume, (int, float, complex)) and not isinstance(args.volume, bool): volume()
+
+if args.playlist: 
+    playlist()
+    quit()
 
 if args.name == "previus": play(config["previus"]) 
 
