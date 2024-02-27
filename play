@@ -61,13 +61,15 @@ def playlist():
         quit()
     
     if not args.playlist[0] in playlists.keys():
-        config["playlists"][args.playlist[0]] = [song for song in args.playlist if song in songs.keys()]
+        config["playlists"][args.playlist[0]] = [song for song in args.playlist[1:] if song in songs.keys()]
+        print(f"{[song for song in args.playlist[1:] if not song in songs.keys()]} is not in the store and will not be added to the playlist")
         dump_config()
         
         return
     
     if len(args.playlist) > 1:
-        config["playlists"][args.playlist[0]] = [song for song in args.playlist if song in songs.keys()] + config["playlists"][args.playlist[0]]
+        config["playlists"][args.playlist[0]] = [song for song in args.playlist[1:] if song in songs.keys()] + config["playlists"][args.playlist[0]]
+        print(f"{[song for song in args.playlist[1:] if not song in songs.keys()]} is not in the store and will not be added to the playlist")
         dump_config()
         
         return
