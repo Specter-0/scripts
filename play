@@ -13,6 +13,7 @@ parser.add_argument("-a", "--add", help="Add a new mp3 to the store from the giv
 parser.add_argument("-v", "--volume", help="Set the volume of the player", type=float)
 parser.add_argument("-l", "--playlist", help="select a playlist, if it does not exist creates a new one, params after will be added to list", type=str, nargs="*")
 parser.add_argument("-d", "--delete", help="delete a song or playlist, if selection a playlist and a arg is passed, will remove that song for the playlist", type=str, nargs="*")
+parser.add_argument("-r", "--repeat", help="repeat chosen song", action="store_true")
 
 parser.add_argument("--config", help="prints the config file", action="store_true")
 parser.add_argument("--store", help="prints all songs in the store", action="store_true")
@@ -132,6 +133,11 @@ def delete():
 
     dump_config()
 
+
+def repeat(name : str):
+    while True:
+        play(name)
+
 if args.config: 
     print_config()
     quit()
@@ -149,6 +155,10 @@ if args.playlist:
     quit()
 
 if args.name == "previus": play(config["previus"]) 
+
+if args.repeat:
+    repeat(args.name)
+    quit()
 
 elif args.name and not args.add: 
     if not play(args.name) and args.name in config["playlists"]:
