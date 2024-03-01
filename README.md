@@ -35,10 +35,9 @@ you should now be able to run the files as CLI tools
 
 ---
 
-## *List*
+# *Scripts docs*
 
----
-### **gits**
+## **gits**
 #### Setup and push git with fast commands
 
 usage: gits [message] [-h HELP] [-s SETUP]
@@ -56,7 +55,7 @@ args: [**remote git repo**]
 ---
 
 ---
-### **mkmf**
+## **mkmf**
 #### create makefiles for languages
 
 usage: mkmf [language]
@@ -64,7 +63,7 @@ usage: mkmf [language]
 ---
 
 ---
-### **del**
+## **del**
 #### fast sudo rm -rf delete
 
 usage: del [file/dir] [-h HELP] [-p PASSWORD]
@@ -82,7 +81,7 @@ args: [**password**]
 ---
 
 ---
-### **play**
+## **play**
 #### youtube mp3 player
 
 usage: play [name] [-h HELP] [-a ADD] [-v, VOLUME] [-l PLAYLIST] [-d DELETE] [-r REPETE]
