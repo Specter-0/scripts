@@ -46,15 +46,18 @@ usage: gits [message] [-h HELP] [-s SETUP]
 positional arguments:
 message **&lt;Commit message&gt;**
 
-Flags
+
+Flags:
+
 -h, --help : **Show help message.**
+ 
 
 -s, --setup : **initalize remote git and configure origin**
 args: [**remote git repo**]
 
----
 
 ---
+
 ## **mkmf**
 #### create makefiles for languages
 
@@ -62,7 +65,6 @@ usage: mkmf [language]
 
 ---
 
----
 ## **del**
 #### fast sudo rm -rf delete
 
@@ -72,15 +74,18 @@ usage: del [file/dir] [-h HELP] [-p PASSWORD]
 positional arguments:
 To be deleted **&lt;File or Dir&gt;**
 
-Flags
+
+Flags:
+
 -h, --help : **Show help message.**
+
 
 -p : **Setup .env file with encrypted password**
 args: [**password**]
 
----
 
 ---
+
 ## **play**
 #### youtube mp3 player
 
@@ -88,27 +93,37 @@ usage: play [name] [-h HELP] [-a ADD] [-v, VOLUME] [-l PLAYLIST] [-d DELETE] [-r
 
 
 positional arguments:
+
 named mp3 **&lt;Name&gt;**
+
 previus **if 'previus' in place of name then play the previus song**
 
-Flags
+Flags:
+
 -h, --help : **Show help message.**
+
 
 -a, --add : **Add a mp3 from youtube by passing link, name must be uniqe**
 args: [**name, youtube link**]
 
+
 -v, --volume **Set the volume of the player**
 args: [**(float) volume**]
+
 
 -l, --playlist **Select a playlist, if it does not exist creates a new one, params after will be added to list**
 args: [**playlist, item to add to playlist?...**]
 
+
 -d, --delete **Delete a song or playlist, if selection a playlist and a second arg is passed, will remove song(s) for the playlist**
 args: [**item, playlist items?...**]
 
+
 -r, --repeat **Repeat chosen song**
 
+
 --config: **Prints config to cmdline**
+
 --store: **Prints all songs added to cmdline**
 
 ---
