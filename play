@@ -15,7 +15,7 @@ def path(string : str):
 parser = argparse.ArgumentParser(description='save and play youtube mp3s from the command line.')
 
 parser.add_argument("name", help="name of song to play or add", type=str, nargs="?", default=None)
-parser.add_argument("-a", "--add", help="Add a new mp3 to the store from the given youtube url", type=str)
+parser.add_argument("-a", "--add", help="Add a new mp3 to the store from the given youtube url", type=str, nargs=2)
 parser.add_argument("-v", "--volume", help="Set the volume of the player", type=float)
 parser.add_argument("-l", "--playlist", help="select a playlist, if it does not exist creates a new one, params after will be added to list", type=str, nargs="*")
 parser.add_argument("-d", "--delete", help="delete a song or playlist, if selection a playlist and a arg is passed, will remove that song for the playlist", type=str, nargs="*")
@@ -101,13 +101,13 @@ def volume():
     dump_config()
 
 def add():
-    if args.name in used_names:
-        print(f"Name {args.name} already exists as a {used_names[args.name]}")
+    if args.add[0] in used_names:
+        print(f"Name {args.add[0]} already exists as a {used_names[args.add[0]]}")
         quit()
     
     options = {
             'format': 'bestaudio/best',
-            'outtmpl': path(f"~/scripts/music/{args.name}"),
+            'outtmpl': path(f"~/scripts/music/{args.add[0]}"),
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
@@ -116,9 +116,9 @@ def add():
         }
 
     ydl = yt_dlp.YoutubeDL(options)
-    ydl.download([args.add])
+    ydl.download([args.add[1]])
     
-    print(f"Added {args.name} to store")
+    print(f"Added {args.add[0]} to store")
 
 def print_config():
     print("\nConfig: {")
