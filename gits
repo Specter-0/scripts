@@ -4,14 +4,15 @@ import subprocess as cmd
 
 parser = argparse.ArgumentParser(description="Ez git push and setup")
 
-parser.add_argument("message", help="Commit message", nargs="+")
+parser.add_argument("message", help="Commit message", nargs="*")
 parser.add_argument("-s", "--setup", help="Setup git, provide git repo to setup", nargs=1)
 
 args = parser.parse_args()
 
 if args.setup:
     cmd.run(["git", "init"])
-    cmd.run(["git", "remote", "add", "origin", args.setup])
+    cmd.run(["git", "remote", "add", "origin", args.setup[0]])
+    cmd.run(["git", "pull", "origin", "main"])
     cmd.run(["git", "push", "--set-upstream", "origin", "main"])
     
     quit()

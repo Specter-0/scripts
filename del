@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# To use create a .env file with the following content: 
+# SUDO_PASSWORD=yourpassword <- replace yourpassword with your actual password
+
+source .env
+
+if [ -z $1 ]; then
+    echo "Please provide a file or directory to delete"
+    exit 1
+fi
+
+echo $SUDO_PASSWORD | sudo -S rm -rf $1
