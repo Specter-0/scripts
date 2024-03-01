@@ -1,15 +1,32 @@
 #!/usr/local/bin/python3
-import sys
-import subprocess
+import sys, argparse
+import subprocess as cmd
 
-if len(sys.argv) < 2:
+parser = argparse.ArgumentParser(description="Ez git push and setup")
+
+parser.add_argument("message", help="Commit message", nargs="+")
+parser.add_argument("-s", "--setup", help="Setup git, provide git repo to setup", nargs=1)
+
+args = parser.parse_args()
+
+if args.setup:
+    cmd.run(["git", "init"])
+    cmd.run(["git", "remote", "add", "origin", args.setup])
+    cmd.run(["git", "push", "--set-upstream", "origin", "main"])
+    
+    quit()
+
+elif args.message:
+    message = ""
+    for arg in args.message:
+        message += arg + " "
+
+    cmd.run(["git", "add", "."])
+    cmd.run(["git", "commit", "-m", message])
+    cmd.run(["git", "push"])
+    
+    quit()
+
+else:
     print("Usage: gits <message>")
-    sys.exit(1)
-
-message = ""
-for arg in sys.argv[1:]:
-    message += arg + " "
-
-subprocess.run(["git", "add", "."])
-subprocess.run(["git", "commit", "-m", message])
-subprocess.run(["git", "push"])
+    quit()

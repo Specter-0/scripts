@@ -31,6 +31,14 @@ all:
 """
 			)
 		
+		case "node":
+			open("makefile", "w").write(
+"""
+all:
+	npm run dev
+"""
+		)
+
 		case "remove":
 			os.remove("makefile")
    
