@@ -2,6 +2,12 @@
 import yt_dlp, argparse, time, json, os, subprocess
 import pygame as pg
 
+# To use this script you need to have the following installed:
+# - yt-dlp
+# - pygame
+# - ffmpeg
+# - python3
+
 def path(string : str):
     return os.path.expanduser(string)
     

@@ -1,15 +1,49 @@
 #!/bin/bash
 
-# To use create a .env file with the following content: 
-# SUDO_PASSWORD=yourpassword <- replace yourpassword with your actual password
+# To use this script you need to have the following installed:
+# - openssl
+# To install on mac run: brew install openssl
+
 
 # WARNING: This script will delete files and directories without asking for confirmation
 
-source .env
+SENV=~/scripts/.env
 
-if [ -z $1 ]; then
-    echo "Please provide a file or directory to delete"
+function encrypt() {
+    echo -n "$1" | openssl enc -aes-256-cbc -a -salt -pbkdf2 -pass pass:"554"
+}
+
+function decrypt() {
+    echo "$1" | openssl enc -aes-256-cbc -a -d -salt -pbkdf2 -pass pass:"554"
+}
+
+if [ $# -eq 0 ] || [ $1 == "-h" ]; then
+    echo "Usage: del <file or directory>"
+    echo "-p Configur password for del <sudo password>"
+    
     exit 1
 fi
 
-echo $SUDO_PASSWORD | sudo -S rm -rf $1
+if [ "$1" == "-p" ] && [ $# -eq 2 ]; then
+    if ! [ -f $SENV ]; then
+        touch $SENV
+    fi
+    > $SENV
+
+    echo -e "SUDO_PASSWORD=\"$(encrypt $2)\"" >> $SENV
+
+    exit 1
+
+elif [ $1 = "-p" ] && [ $# -eq 1 ]; then
+    echo "provied a password"
+
+    exit 1
+
+elif ! [ -f $SENV ]; then
+    echo "Do -p with password to setup del"
+
+    exit 1
+fi
+
+source $SENV
+echo $(decrypt $SUDO_PASSWORD) | sudo -S rm -rf $1
