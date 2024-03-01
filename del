@@ -3,6 +3,8 @@
 # To use create a .env file with the following content: 
 # SUDO_PASSWORD=yourpassword <- replace yourpassword with your actual password
 
+# WARNING: This script will delete files and directories without asking for confirmation
+
 source .env
 
 if [ -z $1 ]; then
