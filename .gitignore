@@ -1,3 +1,4 @@
 music/*
 !music/.gitkeep
 .env
+.playconfig.json

@@ -11,11 +11,11 @@ programs don't have the extension, just add it back, language can prob be read f
 ## **To Use**
 
 run the setup file to turn all files executables
-change setup into an executable using chmod
+change .setup into an executable using chmod
 ``` bash
 chmod +x .setup.sh
 ```
-then
+then run
 ``` bash
 .setup
 ```
