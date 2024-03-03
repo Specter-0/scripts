@@ -15,7 +15,6 @@ parser.add_argument("-r", "--revert", help="Revert to a previous commit", action
 args = parser.parse_args()
 
 if args.revert:
-    
     cmd.run(["git", "reset", "--hard"])
     quit()
 
