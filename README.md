@@ -55,6 +55,7 @@ Flags:
 -s, --setup : **initalize remote git and configure origin**
 args: [**remote git repo**]
 
+-r, --revert : **Revert all changes to previus commit**
 
 ---
 
