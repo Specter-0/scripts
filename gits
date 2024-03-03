@@ -38,5 +38,5 @@ elif args.message:
     quit()
 
 else:
-    print("Usage: gits <message>")
+    print("Usage: gits <message> [-s <git-repo>] [-r (revert to previous commit)]")
     quit()
