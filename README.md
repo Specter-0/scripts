@@ -128,3 +128,23 @@ args: [**item, playlist items?...**]
 --store: **Prints all songs added to cmdline**
 
 ---
+
+## **longmake**
+#### run the makefile of a saved directory from anywhere 
+
+usage: longmake [directory alias] [-h HELP] [-a ADD]
+
+
+positional arguments:
+args: **&lt;alias, &#42;kwargs&gt;**
+
+
+Flags:
+
+-h, --help : **Show help message.**
+
+-a, --add : **Add a directory under an alias**
+args: [**alias, path from home**]
+
+
+---

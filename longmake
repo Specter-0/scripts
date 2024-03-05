@@ -1,5 +1,5 @@
 #!/usr/local/bin/python3
-import os, argparse, json
+import os, argparse
 from utils import Config, path
 
 parser = argparse.ArgumentParser(description="Run makefiles from saved directories")

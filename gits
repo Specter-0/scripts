@@ -1,5 +1,5 @@
 #!/usr/local/bin/python3
-import sys, argparse
+import argparse
 import subprocess as cmd
 
 # To use this script you need to have the following installed:
