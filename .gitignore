@@ -1,6 +1,7 @@
 music/*
 !music/.gitkeep
 .env
-.json
+.playconfig.json
+.longmakeconfig.json
 
 __pycache__/
