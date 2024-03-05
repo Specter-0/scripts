@@ -28,4 +28,3 @@ elif args.makefile:
     else:
         print(f"Directory {args.makefile[0]} not found")
         quit()
-    

@@ -45,5 +45,16 @@ elif ! [ -f $SENV ]; then
     exit 1
 fi
 
+# check if the file or directory is in the array, if so ask for confirmation
+ask_array=("/", "/bin", "/boot", "/dev", "/etc", "/home", "/lib", "/lib64", "/media", "/mnt", "/opt", "/proc", "/root", "/run", "/sbin", "/srv", "/sys", "/tmp", "/usr", "/var") # ty copilot
+if [[ "${ask_array[@]}" =~ $1  ]]; then
+    echo "You are trying to delete a system file or directory, are you sure you want to do this? (y/n)"
+    read -r answer
+    if [ "$answer" = "n" ]; then
+        echo "Aborted"
+        exit 1
+    fi
+fi
+
 source $SENV
 echo $(decrypt $SUDO_PASSWORD) | sudo -S rm -rf $1
