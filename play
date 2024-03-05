@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3
 import yt_dlp, argparse, time, json, os, subprocess
 import pygame as pg
+from utils import path, Config
 
 # To use this script you need to have the following installed:
 # - yt-dlp
@@ -26,30 +27,25 @@ parser.add_argument("--store", help="prints all songs in the store", action="sto
 
 args = parser.parse_args()
 
-config_ref : str = path("~/scripts/.playconfig.json")
-config : dict = json.load(open(config_ref))
-dump_config = lambda : json.dump(config, open(config_ref, "w"), indent=4)
-
-if not os.path.exists(config_ref):
-    config = {
-        "previus": None,
-        "volume": 1.0,
-        "playlists": {}
-    }
-    dump_config()
+config = Config("playconfig", {
+    "previus": None,
+    "volume": 1.0,
+    "playlists": {}
+})
 
 songs = {f.split(".")[0] : "song" for f in os.listdir(path("~/scripts/music")) if len(f.split(".")[0]) > 0} # get all the names of the files in the music folder and playlists
-playlists = {k : "playlist" for k in config["playlists"].keys()}
+playlists = {k : "playlist" for k in config.load()["playlists"].keys()}
 used_names = {**songs, **playlists}
 
 def play(name: str) -> bool:
+    data = config.load()
     if not name in songs and name in playlists.keys(): 
         print("\nContent {")
-        for song in config["playlists"][name]:
+        for song in data["playlists"][name]:
             print(f"    {song}")    
         print("}")
             
-        for song in config["playlists"][name]:
+        for song in data["playlists"][name]:
             play(song)
     
     elif not name in songs:
@@ -59,13 +55,13 @@ def play(name: str) -> bool:
     print(f"Playing {name}")
     pg.mixer.init()
     pg.mixer.music.load(path(f"~/scripts/music/{name}.mp3"))
-    pg.mixer.music.set_volume(config["volume"])
+    pg.mixer.music.set_volume(data["volume"])
     pg.mixer.music.play()
     
     song_len = pg.mixer.Sound(path(f"~/scripts/music/{name}.mp3")).get_length()
     
-    config["previus"] = name
-    dump_config()
+    data["previus"] = name
+    config.dump(data)
     
     while pg.mixer.music.get_busy(): 
         subprocess.run(["clear"])
@@ -86,27 +82,29 @@ def play(name: str) -> bool:
     return True
 
 def playlist():
+    data = config.load()
     if len(args.playlist) == 0:
         print("No playlist name given")
         quit()
     
     if not args.playlist[0] in playlists.keys():
-        config["playlists"][args.playlist[0]] = [song for song in args.playlist[1:] if song in songs.keys()]
+        data["playlists"][args.playlist[0]] = [song for song in args.playlist[1:] if song in songs.keys()]
         print(f"{[song for song in args.playlist[1:] if not song in songs.keys()]} is not in the store and will not be added to the playlist")
-        dump_config()
+        config.dump(data)
         
         return
     
     if len(args.playlist) > 1:
-        config["playlists"][args.playlist[0]] = [song for song in args.playlist[1:] if song in songs.keys()] + config["playlists"][args.playlist[0]]
+        data["playlists"][args.playlist[0]] = [song for song in args.playlist[1:] if song in songs.keys()] + data["playlists"][args.playlist[0]]
         print(f"{[song for song in args.playlist[1:] if not song in songs.keys()]} is not in the store and will not be added to the playlist")
-        dump_config()
+        config.dump(data)
         
         return
 
 def volume():
-    config["volume"] = args.volume
-    dump_config()
+    data = config.load()
+    data["volume"] = args.volume
+    config.dump(data)
 
 def add():
     if args.add[0] in used_names:
@@ -130,7 +128,7 @@ def add():
 
 def print_config():
     print("\nConfig: {")
-    for k, v in config.items():
+    for k, v in config.load().items():
         print(f"    {k}: {v}")
     print("}")
 
@@ -141,6 +139,7 @@ def print_store():
     print("}")
 
 def delete():
+    data = config.load()
     if len(args.delete) == 0:
         print("No name to delete")
         quit()
@@ -152,15 +151,15 @@ def delete():
     elif args.delete[0] in playlists.keys():
         if len(args.delete) > 1:
             for song in args.delete[1:]:
-                config["playlists"][args.delete[0]].remove(song)
+                data["playlists"][args.delete[0]].remove(song)
                 print(f"Removed {song} from {args.delete[0]}")
         else:
-            del config["playlists"][args.delete[0]]
+            del data["playlists"][args.delete[0]]
             print(f"Deleted {args.delete}")
     else:
         print(f"Name {args.delete[0]} not found in store")
 
-    dump_config()
+    config.dump(data)
 
 
 def repeat(name : str):
@@ -183,14 +182,14 @@ if args.playlist:
     playlist()
     quit()
 
-if args.name == "previus": play(config["previus"]) 
+if args.name == "previus": play(config.load()["previus"]) 
 
 if args.repeat:
     repeat(args.name)
     quit()
 
 elif args.name and not args.add: 
-    if not play(args.name) and args.name in config["playlists"]:
+    if not play(args.name) and args.name in config.load()["playlists"]:
         playlist(args.name)
         
 else:
