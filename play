@@ -30,6 +30,14 @@ config_ref : str = path("~/scripts/.playconfig.json")
 config : dict = json.load(open(config_ref))
 dump_config = lambda : json.dump(config, open(config_ref, "w"), indent=4)
 
+if not os.path.exists(config_ref):
+    config = {
+        "previus": None,
+        "volume": 1.0,
+        "playlists": {}
+    }
+    dump_config()
+
 songs = {f.split(".")[0] : "song" for f in os.listdir(path("~/scripts/music")) if len(f.split(".")[0]) > 0} # get all the names of the files in the music folder and playlists
 playlists = {k : "playlist" for k in config["playlists"].keys()}
 used_names = {**songs, **playlists}

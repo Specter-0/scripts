@@ -1,4 +1,6 @@
 music/*
 !music/.gitkeep
 .env
-.playconfig.json
+.json
+
+__pycache__/

@@ -1,0 +1,31 @@
+#!/usr/local/bin/python3
+import os, argparse, json
+from utils import Config, path
+
+parser = argparse.ArgumentParser(description="Run makefiles from saved directories")
+
+parser.add_argument("makefile", help="Makefile name + makefile args", nargs="*")
+parser.add_argument("-a", "--add", help="Add a directory to run a makefile in: <Save name> <Path from home>", nargs=2)
+
+config = Config("longmakeconfig", {})
+
+args = parser.parse_args()
+
+if args.add:
+    data = config.load()
+    
+    data[args.add[0]] = args.add[1]
+    
+    config.dump(data)
+
+elif args.makefile:
+    data = config.load()
+    
+    if args.makefile[0] in data.keys():
+        os.chdir(path(data[args.makefile[0]]))
+        os.system("make " + " ".join(args.makefile[1:]))
+
+    else:
+        print(f"Directory {args.makefile[0]} not found")
+        quit()
+    
