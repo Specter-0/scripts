@@ -3,5 +3,5 @@ music/*
 .env
 .playconfig.json
 .longmakeconfig.json
-
+test
 __pycache__/

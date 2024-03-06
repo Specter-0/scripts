@@ -6,13 +6,35 @@ parser = argparse.ArgumentParser(description="Run makefiles from saved directori
 
 parser.add_argument("makefile", help="Makefile name + makefile args", nargs="*")
 parser.add_argument("-a", "--add", help="Add a directory to run a makefile in: <Save name> <Path from home>", nargs=2)
+parser.add_argument("-r", "--args", help="Add a args to automaticaly run when running a directory alias: <Name same as dir alias> <*args, *kwargs>", nargs="+")
+parser.add_argument("-n", "--none", help="prevent autofill args for -r", action="store_true")
 
-config = Config("longmakeconfig", {})
+config = Config("longmakeconfig", {"args": {} })
 
 args = parser.parse_args()
 
+def reserved(name):
+    if name in ["args"]:
+        print(f"{name} is a reserved name")
+        quit(1)
+
+if args.args:
+    if len(args.args) < 2:
+        print("You need to provide a name and args")
+        exit(1)
+    
+    data = config.load()
+    
+    reserved(args.args[0])
+    
+    data["args"][args.args[0]] = args.args[1:]
+    
+    config.dump(data)
+
 if args.add:
     data = config.load()
+    
+    reserved(args.add[0])
     
     data[args.add[0]] = args.add[1]
     
@@ -21,7 +43,11 @@ if args.add:
 elif args.makefile:
     data = config.load()
     
-    if args.makefile[0] in data.keys():
+    if data["args"].get(args.makefile[0]) and not args.none:
+        os.chdir(path(data[args.makefile[0]]))
+        os.system("make " + " ".join(data["args"][args.makefile[0]]) + " " + " ".join(args.makefile[1:]))
+    
+    elif args.makefile[0] in data.keys():
         os.chdir(path(data[args.makefile[0]]))
         os.system("make " + " ".join(args.makefile[1:]))
 

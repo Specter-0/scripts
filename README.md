@@ -127,6 +127,11 @@ args: [**item, playlist items?...**]
 
 --store: **Prints all songs added to cmdline**
 
+
+> Note: you can dump .mp3 files into music
+> to run them as any other downloaded yt mp3.
+> Remember: run without .mp3 extension
+
 ---
 
 ## **longmake**
@@ -146,5 +151,7 @@ Flags:
 -a, --add : **Add a directory under an alias**
 args: [**alias, path from home**]
 
+-r, --args : **Add args to automaticaly run when running directory alias**
+args: [**a saved dir alias, &#42;args &#42;kwargs**]
 
 ---
