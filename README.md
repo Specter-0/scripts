@@ -156,7 +156,7 @@ args: [**a saved dir alias, &#42;args &#42;kwargs**]
 
 --config : **Display config file**
 
-> Note: use `pwd` as the path to add current directory as target
+> Note: use &#x0060;pwd&#x0060; as the path to add current directory as target
 > pwd: returns current working dir for home
 
 ---
