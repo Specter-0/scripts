@@ -8,6 +8,7 @@ parser.add_argument("makefile", help="Makefile name + makefile args", nargs="*")
 parser.add_argument("-a", "--add", help="Add a directory to run a makefile in: <Save name> <Path from home>", nargs=2)
 parser.add_argument("-r", "--args", help="Add a args to automaticaly run when running a directory alias: <Name same as dir alias> <*args, *kwargs>", nargs="+")
 parser.add_argument("-n", "--none", help="prevent autofill args for -r", action="store_true")
+parser.add_argument("--config", help="Display config file", action="store_true")
 
 config = Config("longmakeconfig", {"args": {} })
 
@@ -17,7 +18,22 @@ def reserved(name):
     if name in ["args"]:
         print(f"{name} is a reserved name")
         quit(1)
-
+        
+if args.config:
+    data = config.load()
+    
+    print("\nConfig file:")
+    
+    for key, value in data.items():
+        if key == "args":continue
+        
+        print(f"    {key}: {value}")
+    
+    print("\nargs:")
+    
+    for key, value in data["args"].items():
+        print(f"    {key}: {value}")
+        
 if args.args:
     if len(args.args) < 2:
         print("You need to provide a name and args")
