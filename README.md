@@ -154,4 +154,6 @@ args: [**alias, path from home**]
 -r, --args : **Add args to automaticaly run when running directory alias**
 args: [**a saved dir alias, &#42;args &#42;kwargs**]
 
+> Note: use "PWD" as the path to add current directory as target
+
 ---
