@@ -1,8 +1,8 @@
 #!/bin/bash
 files=$(ls)
 
-# This is the setup file for the project
-# Turns all scripts in the project into executables
+# ? This is the setup file for the project
+# ? Turns all scripts in the project into executables
 
 makeExecutable() {
     if [[ ! $1 == *"."* ]]; then

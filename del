@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# To use this script you need to have the following installed:
-# - openssl
-# To install on mac run: brew install openssl
+# ! To use this script you need to have the following installed:
+# * - openssl
+# ? To install on mac run: brew install openssl
 
 
-# WARNING: This script will delete files and directories without asking for confirmation
+# //! WARNING: This script will delete files and directories without asking for confirmation
 
 SENV=~/scripts/.env
 

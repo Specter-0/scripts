@@ -2,9 +2,9 @@
 import argparse
 import subprocess as cmd
 
-# To use this script you need to have the following installed:
-# - python3
-# - argparse
+# ! To use this script you need to have the following installed:
+# * - python3
+# * - argparse
 
 parser = argparse.ArgumentParser(description="Ez git push and setup")
 

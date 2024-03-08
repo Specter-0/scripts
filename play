@@ -3,11 +3,11 @@ import yt_dlp, argparse, time, os, subprocess
 import pygame as pg
 from utils import path, Config
 
-# To use this script you need to have the following installed:
-# - yt-dlp
-# - pygame
-# - ffmpeg
-# - python3
+# ! To use this script you need to have the following installed:
+# * - yt-dlp
+# * - pygame
+# * - ffmpeg
+# * - python3
 
 def path(string : str):
     return os.path.expanduser(string)

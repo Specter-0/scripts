@@ -1,6 +1,8 @@
 #!/usr/local/bin/python3
 import os, json
 
+# ? This is a module that contains a class and a function that are used in scripts
+
 def path(string : str):
         return os.path.expanduser(string)
 
