@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
-import yt_dlp, argparse, time, os, subprocess
+import yt_dlp, argparse, time, os
 import pygame as pg
-from utils import path, Config
+from utils import path, Config, clear
 
 # ! To use this script you need to have the following installed:
 # * - yt-dlp
@@ -62,22 +62,27 @@ def play(name: str) -> bool:
     
     data["previus"] = name
     config.dump(data)
+    try:
+        while pg.mixer.music.get_busy(): 
+            clear()
+            print(f"Playing {name}")
+            
+            print("Duration: |", end="")
+            for i in range(0, 50):
+                if i < int(pg.mixer.music.get_pos() / 1000 / song_len * 50):
+                    print("█", end="")
+                else:
+                    print("-", end="")
+            print("|", end="")
+            
+            print("", int(pg.mixer.music.get_pos() / 1000), "|", int(song_len - int(pg.mixer.music.get_pos() / 1000)))
+            
+            time.sleep(0.2)
     
-    while pg.mixer.music.get_busy(): 
-        subprocess.run(["clear"])
-        print(f"Playing {name}")
-        
-        print("Duration: |", end="")
-        for i in range(0, 50):
-            if i < int(pg.mixer.music.get_pos() / 1000 / song_len * 50):
-                print("█", end="")
-            else:
-                print("-", end="")
-        print("|", end="")
-        
-        print("", int(pg.mixer.music.get_pos() / 1000), "|", int(song_len - int(pg.mixer.music.get_pos() / 1000)))
-        
-        time.sleep(0.2)
+    except KeyboardInterrupt:
+        pg.mixer.music.stop()
+        clear()
+        quit(0)
       
     return True
 

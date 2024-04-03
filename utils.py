@@ -1,10 +1,13 @@
 #!/usr/local/bin/python3
-import os, json
+import os, json, subprocess
 
 # ? This is a module that contains a class and a function that are used in scripts
 
 def path(string : str):
-        return os.path.expanduser(string)
+    return os.path.expanduser(string)
+    
+def clear():
+    subprocess.run(["clear"])
 
 class Config:
     def __init__(self, filename : str, structure : dict) -> None:
