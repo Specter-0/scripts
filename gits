@@ -20,9 +20,11 @@ if args.revert:
 
 if args.setup:
     cmd.run(["git", "init"])
+    cmd.run(["git", "add", "."])
+    cmd.run(["git", "commit", "-m", "Initial commit"])
+    cmd.run(["git", "branch", "-M", "main"])
     cmd.run(["git", "remote", "add", "origin", args.setup[0]])
-    cmd.run(["git", "pull", "origin", "main"])
-    cmd.run(["git", "push", "--set-upstream", "origin", "main"])
+    cmd.run(["git", "push", "-u", "origin", "main"])
     
     quit()
 
