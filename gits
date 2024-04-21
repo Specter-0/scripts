@@ -11,11 +11,22 @@ parser = argparse.ArgumentParser(description="Ez git push and setup")
 parser.add_argument("message", help="Commit message", nargs="*")
 parser.add_argument("-s", "--setup", help="Setup git, provide git repo to setup", nargs=1)
 parser.add_argument("-r", "--revert", help="Revert to a previous commit", action="store_true")
+parser.add_argument("-l", "--local", help="Commit locally", action="store_true")
 
 args = parser.parse_args()
 
 if args.revert:
     cmd.run(["git", "reset", "--hard"])
+    quit()
+    
+if args.local:
+    message = ""
+    for arg in args.message:
+        message += arg + " "
+    
+    cmd.run(["git", "add", "."])
+    cmd.run(["git", "commit", "-m", message])
+    
     quit()
 
 if args.setup:

@@ -57,6 +57,8 @@ args: [**remote git repo**]
 
 -r, --revert : **Undo all changes back to previus commit**
 
+-l, --local : **Commit localy**
+
 ---
 
 ## **mkmf**
