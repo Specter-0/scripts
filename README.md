@@ -55,6 +55,9 @@ Flags:
 -s, --setup : **initalize remote git and configure origin**
 args: [**remote git repo**]
 
+-o, --open : **Clone a github repo into current dir**
+args: [**remote git repo**]
+
 -r, --revert : **Undo all changes back to previus commit**
 
 -l, --local : **Commit localy**

@@ -1,10 +1,18 @@
 #!/usr/local/bin/python3
-import argparse
+import argparse, os
 import subprocess as cmd
 
 # ! To use this script you need to have the following installed:
 # * - python3
 # * - argparse
+
+def line(string : str) -> list[str]:
+    return string.split(" ")
+
+def cmd_set(cmds : list[list[str]]) -> None:
+    for command in cmds:
+        if type(command) == list: cmd.run(command)
+        else: cmd.run(line(command))
 
 parser = argparse.ArgumentParser(description="Ez git push and setup")
 
@@ -12,11 +20,12 @@ parser.add_argument("message", help="Commit message", nargs="*")
 parser.add_argument("-s", "--setup", help="Setup git, provide git repo to setup", nargs=1)
 parser.add_argument("-r", "--revert", help="Revert to a previous commit", action="store_true")
 parser.add_argument("-l", "--local", help="Commit locally", action="store_true")
+parser.add_argument("-o", "--open", help="Opens and sets up an existing git repo", nargs=1)
 
 args = parser.parse_args()
 
 if args.revert:
-    cmd.run(["git", "reset", "--hard"])
+    cmd.run(line("git reset --hard"))
     quit()
     
 if args.local:
@@ -24,18 +33,27 @@ if args.local:
     for arg in args.message:
         message += arg + " "
     
-    cmd.run(["git", "add", "."])
+    cmd.run(line("git add ."))
     cmd.run(["git", "commit", "-m", message])
     
     quit()
 
 if args.setup:
-    cmd.run(["git", "init"])
-    cmd.run(["git", "add", "."])
-    cmd.run(["git", "commit", "-m", "Initial commit"])
-    cmd.run(["git", "branch", "-M", "main"])
-    cmd.run(["git", "remote", "add", "origin", args.setup[0]])
-    cmd.run(["git", "push", "-u", "origin", "main"])
+    cmd_set([
+        "git init",
+        "git add .",
+        "git commit -m Initial commit",
+        "git branch -M main",
+        ["git", "remote", "add", "origin", args.setup[0]],
+        "git push -u origin main"
+    ])
+    
+    quit()
+    
+if args.open:
+    cmd_set([
+        f"git clone {args.open[0]} .",
+    ])
     
     quit()
 
@@ -43,10 +61,12 @@ elif args.message:
     message = ""
     for arg in args.message:
         message += arg + " "
-
-    cmd.run(["git", "add", "."])
-    cmd.run(["git", "commit", "-m", message])
-    cmd.run(["git", "push"])
+        
+    cmd_set([
+        "git add .",
+        ["git", "commit", "-m", message],
+        "git push"
+    ])
     
     quit()
 
