@@ -1,6 +1,5 @@
 #!/usr/local/bin/python3
-
-# ! Above is the shebang line, it tells the terminal how to interpret the script
+# ! ^^ Above is the shebang line, it tells the terminal how to interpret the script
 # ! It is not normaly needed because the extension of the file tells the terminal how to interpret it
 # ! But when a file does not have an extension, like this one, it is needed to tell the terminal where to find the interpreter
 
