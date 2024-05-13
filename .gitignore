@@ -3,5 +3,6 @@ music/*
 .env
 .playconfig.json
 .longmakeconfig.json
+.macConfig.json
 test
 __pycache__/

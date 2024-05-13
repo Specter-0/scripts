@@ -1,0 +1,47 @@
+#!/usr/local/bin/python3
+import threading, argparse, os, sys, subprocess
+import utils as u
+
+dir = os.getcwd()
+def thread(path, cmd):
+    print(os.getcwd())
+    os.chdir(dir + "/" + path)
+    subprocess.run(cmd.split(" "))
+
+parser = argparse.ArgumentParser(description="runs an api and a frontend in threads")
+parser.add_argument("-a", "--api", help="[path to api dir], [run api command]", type=str, nargs=2)
+parser.add_argument("-f", "--frontend", help="[path to frontend dir], [run frontend command]", type=str, nargs=2)
+
+config = u.Config("macConfig", {"frontend": {}, "api": {}})
+
+args = parser.parse_args()
+
+if args.api:
+    data = config.load()
+    data["api"]["path"] = args.api[0]
+    data["api"]["cmd"] = args.api[1]
+    config.dump(data)
+
+if args.frontend:
+    data = config.load()
+    data["frontend"]["path"] = args.frontend[0]
+    data["frontend"]["cmd"] = args.frontend[1]
+    config.dump(data)
+    
+if not args.api and not args.frontend:
+    data = config.load()
+    if not data["frontend"].get("path"):
+        print("frontend path not set")
+        sys.exit(1)
+    if not data["frontend"].get("cmd"):
+        print("frontend command not set")
+        sys.exit(1)
+    if not data["api"].get("path"):
+        print("api path not set")
+        sys.exit(1)
+    if not data["api"].get("cmd"):
+        print("api command not set")
+        sys.exit(1)
+    
+    threading.Thread(target=thread, args=[data["frontend"]["path"], data["frontend"]["cmd"]], name="frontend").start()
+    threading.Thread(target=thread, args=[data["api"]["path"], data["api"]["cmd"]], name="api", ).start()

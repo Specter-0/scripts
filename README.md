@@ -165,3 +165,23 @@ args: [**a saved dir alias, &#42;args &#42;kwargs**]
 > pwd: returns current working dir for home
 
 ---
+
+## **mac**
+#### run an api and frontend website in on terminal with one command
+
+usage: mac [-h] [-a API API] [-f FRONTEND FRONTEND]
+
+
+Flags:
+
+-h, --help : **Show help message.**
+
+-a, --api : **Configure api**
+args: [**path to api directory, command as string**]
+
+-f, --frontend : **Configure frontend**
+args: [**path to frontend directory, command as string**]
+
+> Note: To run normaly just run mac in terminal after configuration
+
+---
