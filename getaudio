@@ -1,0 +1,26 @@
+#!/usr/local/bin/python3
+import sys, os, yt_dlp, argparse
+from utils import path
+
+parser = argparse.ArgumentParser(description='download audio from a youtube video to current working directory')
+parser.add_argument('url', help='URL of the video', nargs=1)
+
+args = parser.parse_args()
+
+if args.url:
+    url = args.url[0]
+    
+    options = {
+            'format': 'bestaudio/best',
+            'outtmpl': os.path.join(os.getcwd(), 'audio.%(ext)s'),
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+        }
+
+    ydl = yt_dlp.YoutubeDL(options)
+    ydl.download([url])
+    
+    print(f"Downloaded audio")

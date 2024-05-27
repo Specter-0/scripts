@@ -185,3 +185,10 @@ args: [**path to frontend directory, command as string**]
 > Note: To run normaly just run mac in terminal after configuration
 
 ---
+
+## **getaudio**
+#### download audio from a youtube video to current working directory
+
+usage: getaudio [-h] url
+
+> Note: Downloads to current dir as audio
